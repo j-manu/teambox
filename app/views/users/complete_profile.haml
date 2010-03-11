@@ -1,0 +1,7 @@
+%h4= 'Complete Your Registration By Picking a UserName'
+
+
+- form_tag complete_profile_user_path(@user) do
+  %div
+    = text_field_tag 'user_name'
+  = submit_tag "Save" 

@@ -1,0 +1,16 @@
+keys: &keys
+  consumer_key: 
+  consumer_secret:
+  market_consumer_key:
+  market_consumer_secret:
+
+development:
+  <<: *keys
+  consumer_key: anonymous
+  consumer_secret: anonymous
+
+test:
+  <<: *keys
+
+production:
+  <<: *keys

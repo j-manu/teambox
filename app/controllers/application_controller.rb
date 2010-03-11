@@ -6,21 +6,21 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
   rescue_from ActiveRecord::RecordNotFound, :with => :show_errors
-  
+
   include AuthenticatedSystem
   include BannerSystem
-  filter_parameter_logging :password
+  #filter_parameter_logging :password
 
-  before_filter :rss_token, 
-                :confirmed_user?, 
-                :load_project, 
-                :login_required, 
-                :set_locale, 
-                :touch_user, 
+  before_filter :rss_token,
+                :confirmed_user?,
+                :load_project,
+                :login_required,
+                :set_locale,
+                :touch_user,
                 :belongs_to_project?,
                 :set_client,
                 :set_user
-  
+
   private
 
     def check_permissions
@@ -28,18 +28,18 @@ class ApplicationController < ActionController::Base
         render :text => "You don't have permission to edit/update/delete within \"#{@current_project.name}\" project", :status => :forbidden
       end
     end
-    
+
     def show_errors
       render :partial => 'shared/record_not_found', :layout => 'application'
     end
-    
+
     def confirmed_user?
       if current_user and not current_user.is_active?
         flash[:error] = "You need to activate your account first"
         redirect_to unconfirmed_email_user_path(current_user)
       end
     end
-    
+
     def rss_token
       unless params[:rss_token].nil? or !%w(rss ics).include?(params[:format])
         user = User.find_by_rss_token(params[:rss_token])
@@ -55,30 +55,30 @@ class ApplicationController < ActionController::Base
         end
       end
     end
-    
+
     def load_project
       project_id ||= params[:project_id]
       project_id ||= params[:id]
-      
+
       if project_id
         @current_project = Project.find_by_permalink(project_id)
-        
+
         if @current_project
           if current_user && !@current_project.archived?
             current_user.add_recent_project(@current_project)
           end
-        else        
+        else
           flash[:error] = "The project <i>#{h(project_id)}</i> doesn't exist."
           redirect_to projects_path, :status => 301
         end
       end
     end
-    
+
     def set_locale
       # if this is nil then I18n.default_locale will be used
       I18n.locale = logged_in? ? current_user.language : get_browser_locale
     end
-    
+
     def get_browser_locale
       preferred_locale = nil
 
@@ -89,11 +89,11 @@ class ApplicationController < ActionController::Base
                             sort { |a,b| a[1] <=> b[1] }.
                             first
       end
-      
+
       preferred_locale.try(:first) || 'en'
     end
-    
-    
+
+
     def touch_user
       current_user.touch if logged_in?
     end
@@ -124,10 +124,10 @@ class ApplicationController < ActionController::Base
           when 'edit_users'
             user_name = current_user.name
           when 'show_users'
-            user_name = current_user.name            
-        end    
+            user_name = current_user.name
+        end
         @page_title = "#{ "#{html_escape user_name} &rarr;" if user_name } #{translate_location_name}"
-      end    
+      end
     end
 
     MobileClients = /(iPhone|iPod|Android|Opera mini|Blackberry|Palm|Windows CE|Opera mobi|iemobile)/i
@@ -139,7 +139,7 @@ class ApplicationController < ActionController::Base
         request.format = :m
       end
     end
-    
+
     def split_events_by_date(events, start_date=nil)
       start_date ||= Date.today.monday.to_date
       return [] if events.empty?
@@ -152,7 +152,7 @@ class ApplicationController < ActionController::Base
       end
       return split_events
     end
-    
+
     # http://www.coffeepowered.net/2009/02/16/powerful-easy-dry-multi-format-rest-apis-part-2/
     def render(opts = nil, extra_options = {}, &block)
       if opts && opts.is_a?(Hash) then
@@ -182,11 +182,11 @@ class ApplicationController < ActionController::Base
         super(opts, extra_options, &block)
       end
     end
-    
+
     def set_user
       @current_user = current_user || nil
     end
-    
+
     def calculate_position
       # Calculate target position
       if !params[:position].nil?
@@ -206,7 +206,7 @@ class ApplicationController < ActionController::Base
           @insert_footer = false
       end
     end
-    
+
     def save_slot(obj)
       @slot = @page.new_slot(@insert_id, @insert_before, obj)
 
@@ -217,9 +217,27 @@ class ApplicationController < ActionController::Base
         @insert_element = @insert_id == 0 ? nil : "page_slot_#{@insert_id}"
       end
     end
-    
+
     def signups_enabled?
       APP_CONFIG['allow_signups'] || User.count == 0
     end
 
+    def get_consumer
+      require 'oauth/consumer'
+      require 'oauth/signature/rsa/sha1'
+       consumer = OAuth::Consumer.new(OAUTH_CONFIG['consumer_key'],OAUTH_CONFIG['consumer_secret'],
+      {
+      :site => "https://www.google.com",
+      :request_token_path => "/accounts/OAuthGetRequestToken",
+      :access_token_path => "/accounts/OAuthGetAccessToken",
+      :authorize_path=> "/accounts/OAuthAuthorizeToken",
+      :signature_method => "HMAC-SHA1"})
+    end
+
+    def load_invitation
+      if params[:invitation]
+        @invitation = Invitation.find_by_token(params[:invitation])
+        @invitation_token = params[:invitation] if @invitation
+      end
+    end
 end

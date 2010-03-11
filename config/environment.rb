@@ -2,7 +2,7 @@ RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 APP_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/teambox.yml")[RAILS_ENV]
-
+OAUTH_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/google_oauth.yml")[RAILS_ENV]
 Rails::Initializer.run do |config|
   config.load_paths += %W( #{Rails.root}/app/sweepers )
   config.action_controller.session_store = :active_record_store
@@ -12,6 +12,8 @@ Rails::Initializer.run do |config|
   config.gem 'system_timer'
   config.gem 'whenever', :lib => false, :source => 'http://gemcutter.org/'
   config.gem 'icalendar'
+  config.gem 'oauth'
+  config.gem 'xml-simple', :lib => 'xmlsimple'
 
   config.action_view.sanitized_allowed_tags = 'table', 'th', 'tr', 'td'
   config.time_zone = APP_CONFIG['time_zone']

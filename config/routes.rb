@@ -1,6 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.logout            '/logout',              :controller => 'sessions',    :action => 'destroy'
   map.login             '/login',               :controller => 'sessions',    :action => 'new'
+  map.google_login      '/google_login',        :controller => 'sessions',    :action => 'new_oauth'
   map.register          '/register',            :controller => 'users',       :action => 'create'
   map.signup            '/signup',              :controller => 'users',       :action => 'new'
 
@@ -17,7 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   map.create_project_invitation '/projects/:project_id/invite/:login', :controller => 'invitations', :action => 'create', :method => :post
 
   map.resources :reset_passwords
-  map.resource :session
+  map.resource :session, :collection => {:create_oauth => :get, :create_openid => :get}
 
   map.account_settings '/account/settings', :controller => 'users', :action => 'edit', :sub_action => 'settings'
   map.account_picture '/account/picture',   :controller => 'users', :action => 'edit', :sub_action => 'picture'
@@ -27,6 +28,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :has_many => [:invitations,:comments], :member => {
                           :unconfirmed_email => :get,
                           :confirm_email => :get,
+                          :complete_profile => [:get, :post],
                           :contact_importer => :get } do |user|
 
     user.resources :conversations, :has_many => [:comments]
@@ -73,7 +75,7 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :task_lists, :has_many => [:comments], :collection => { :sortable => :get, :archived => :get  }, :member => [:watch,:unwatch] do |task_lists|
         task_lists.resources :tasks, :has_many => [:comments], :member => { :watch => :post, :unwatch => :post, :archive => :put, :unarchive => :put, :reopen => :get, :show_in_main_content => :get }
     end
-    
+
     project.contacts 'contacts', :controller => :people, :action => :contacts, :method => :get
     project.resources :people, :member => { :destroy => :get }
     project.resources :conversations, :has_many => [:comments,:uploads], :member => [:watch,:unwatch]

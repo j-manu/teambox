@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   before_filter :find_user, :only => [ :show, :confirm_email, :login_from_reset_password ]
-  before_filter :load_invitation, :only => [ :new, :create ]
-  skip_before_filter :login_required,  :only => [ :new, :create, :confirm_email, :forgot_password, :reset_password, :login_from_reset_password ]
-  skip_before_filter :confirmed_user?, :only => [ :new, :create, :confirm_email, :forgot_password, :reset_password, :login_from_reset_password, :unconfirmed_email ]
+  before_filter :load_invitation, :only => [ :new, :create, :complete_profile ]
+  skip_before_filter :login_required,  :only => [ :new, :create, :confirm_email, :forgot_password, :reset_password, :login_from_reset_password, :complete_profile ]
+  skip_before_filter :confirmed_user?, :only => [ :new, :create, :confirm_email, :forgot_password, :reset_password, :login_from_reset_password, :unconfirmed_email, :complete_profile ]
   skip_before_filter :load_project
   before_filter :set_page_title
 
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
     projects_shared = @user.projects_shared_with(@current_user)
     @shares_invited_projects = projects_shared.empty? && @user.shares_invited_projects_with?(@current_user)
     @activities = @user.activities_visible_to_user(@current_user)
-    
+
     respond_to do |format|
       if @user != @current_user and (!@shares_invited_projects and projects_shared.empty?)
         format.html {
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
     logout_keeping_session!
     @user = User.new(params[:user])
     @user.confirmed_user = true if @invitation && @invitation.email == @user.email
-    
+
     unless @invitation || signups_enabled?
       flash[:error] = "Public signups are not allowed in this system"
       redirect_to root_path
@@ -137,6 +137,23 @@ class UsersController < ApplicationController
     end
   end
 
+  def complete_profile
+    @user = User.find(session[:new_google_user_id])
+    if request.post?
+      if User.find_by_login(params[:user_name])
+        flash[:error] = "Username is not available. Pick Another"
+      else
+        @user.login = params[:user_name]
+        @user.save(false)
+        self.current_user = @user
+        flash[:error] = nil
+        redirect_back_or_default root_path
+        return
+      end
+    end
+    render :layout => 'sessions'
+  end
+
   private
     def find_user
       unless @user = ( User.find_by_login(params[:id]) || User.find_by_id(params[:id]) )
@@ -145,10 +162,4 @@ class UsersController < ApplicationController
       end
     end
 
-    def load_invitation
-      if params[:invitation]
-        @invitation = Invitation.find_by_token(params[:invitation])
-        @invitation_token = params[:invitation] if @invitation
-      end
-    end
 end

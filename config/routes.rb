@@ -4,6 +4,7 @@ ActionController::Routing::Routes.draw do |map|
   map.google_login      '/google_login',        :controller => 'sessions',    :action => 'new_oauth'
   map.register          '/register',            :controller => 'users',       :action => 'create'
   map.signup            '/signup',              :controller => 'users',       :action => 'new'
+  map.complete_profile  '/users/:id/complete_profile', :controller => 'users', :action => 'complete_profile'
 
   map.welcome           '/welcome',             :controller => 'users',       :action => 'welcome'
   map.close_wecome_tab  '/close_welcome_tab',   :controller => 'users',       :action => 'close_welcome'
@@ -28,7 +29,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :has_many => [:invitations,:comments], :member => {
                           :unconfirmed_email => :get,
                           :confirm_email => :get,
-                          :complete_profile => [:get, :post],
                           :contact_importer => :get } do |user|
 
     user.resources :conversations, :has_many => [:comments]

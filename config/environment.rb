@@ -14,6 +14,8 @@ Rails::Initializer.run do |config|
   config.gem 'icalendar'
   config.gem 'oauth'
   config.gem 'xml-simple', :lib => 'xmlsimple'
+  config.gem 'ruby-openid', :lib => 'openid'
+  config.gem 'ruby-openid-apps-discovery', :lib => 'gapps_openid'
 
   config.action_view.sanitized_allowed_tags = 'table', 'th', 'tr', 'td'
   config.time_zone = APP_CONFIG['time_zone']
@@ -41,3 +43,4 @@ end
 
 # Optional gems to enhance XML performance. Feel free to disable them.
 ActiveSupport::XmlMini.backend = 'LibXML'
+OpenIdAuthentication.store = :file

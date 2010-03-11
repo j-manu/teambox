@@ -147,7 +147,7 @@ class UsersController < ApplicationController
         @user.save(false)
         self.current_user = @user
         flash[:error] = nil
-        redirect_back_or_default root_path
+        redirect_to root_url
         return
       end
     end

@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
   include AuthenticatedSystem
   include BannerSystem
-  #filter_parameter_logging :password
+  filter_parameter_logging :password
 
   before_filter :rss_token,
                 :confirmed_user?,

@@ -26,7 +26,7 @@ class SessionsController < ApplicationController
 
   def create_openid
     OpenID::SimpleSign.store.add_file("#{RAILS_ROOT}/vendor/gems/ruby-openid-apps-discovery-1.01/lib/ca-bundle.crt")
-    authenticate_with_open_id('manu-j.com', :return_to => 'http://teambox.smackaho.st/session/create_openid', :required => ['http://axschema.org/namePerson/first', 'http://axschema.org/namePerson/last', 'http://axschema.org/contact/email']) do |result, identity_url, registration|
+    authenticate_with_open_id(params[:domain], :return_to => "http://#{APP_CONFIG['app_domain']}/session/create_openid", :required => ['http://axschema.org/namePerson/first', 'http://axschema.org/namePerson/last', 'http://axschema.org/contact/email']) do |result, identity_url, registration|
       if result.successful?
         handle_auth_user(registration['http://axschema.org/contact/email'].first,
                          registration['http://axschema.org/namePerson/first'].first,

@@ -75,7 +75,7 @@ defaults: &DEFAULTS
   daily_task_reminder_email_time: "06:00"
 development:
   <<: *DEFAULTS
-  app_domain: localhost:3000
+  app_domain: teambox.smackaho.st 
   allow_outgoing_email: false
 
 production:

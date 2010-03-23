@@ -1,0 +1,2 @@
+page.replace_html "google_docs_attach", :partial => 'google_docs_list', :object => @docs
+page['google_docs_loading'].hide

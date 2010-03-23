@@ -9879,6 +9879,16 @@ function onEndCrop(coords, dimensions){
   $('crop_width').value = dimensions.width;
   $('crop_height').value = dimensions.height;
 }
+Event.addBehavior({
+  ".google_docs_input:click": function(e){
+      top.$('google_docs_list').innerHTML = '';
+      $('google_docs_attach').select('input[type="checkbox"]').each(function(ele){
+        if( $(ele).checked ){
+          top.$('google_docs_list').insert($(ele).cloneNode(true));
+        }
+      });
+    }
+});
 
 Object.extend(Date.prototype, {
   strftime_es: function(format) {
@@ -10903,3 +10913,9 @@ User = {
     return $('current_user_login').readAttribute("value");
   }
 }
+Event.addBehavior({
+  ".tooltip:mouseover":function(e) {
+  },
+  ".tooltip:mouseout": function(e) {
+  }
+});

@@ -9,4 +9,8 @@
       = f.file_field :asset, :size => 25, :id => 'upload_file'
       = loading('upload')
       = observe_upload_form
+      %h4= link_to_remote "Or Select From Your Google Docs", :url => google_docs_url, :method => :get, :loading => "$('google_docs_loading').show()"
+      = loading_image('google_docs_loading')
+      #google_docs_attach{:style => "overflow:scroll;height:150px;padding-bottom:10px;margin-top:10px"}
 =loading('upload_iframe_form')
+

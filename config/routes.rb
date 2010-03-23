@@ -86,6 +86,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :task_lists, :only => [ :index ]
   # map.resources :conversations, :only => [ :index ]
   # map.resources :pages, :only => [ :index ]
+  map.resources :google_docs, :only => [:show, :index]
 
   map.root :controller => 'projects', :action => 'index'
   map.connect 'assets/:id/:style/:filename', :controller => 'uploads', :action => 'download', :conditions => { :method => :get }, :requirements => { :filename => /.*/ }

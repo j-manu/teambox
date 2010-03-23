@@ -1,4 +1,4 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
+# This file is auto-generated from the current state of the database. Instead of editing this file,
 # please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
@@ -344,9 +344,22 @@ ActiveRecord::Schema.define(:version => 20100125103357) do
     t.string  "name"
     t.integer "account_type", :default => 0
   end
-  
+
   create_table "schema_migrations", :force => true do |t|
     t.string  "version"
   end
 
+  create_table :google_docs do |t|
+    t.string :doc_id, :null => false
+    t.string :doc_type,  :null => false
+    t.string :title,  :null => false
+    t.string :link,  :null => false
+    t.string :edit_link,  :null => false
+    t.string :acl_link,  :null => false
+    t.integer :user_id,  :null => false
+    t.integer :comment_id
+    t.integer :project_id
+    t.integer :page_id
+  end
+  add_index :google_docs, :comment_id
 end

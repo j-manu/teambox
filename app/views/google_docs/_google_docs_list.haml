@@ -1,0 +1,5 @@
+- @docs.each_with_index do |doc,index|
+  .google_doc_holder{:style => "float:left;padding:0 30px;height:20px;width:150px;overflow:hidden"}
+    = check_box_tag 'google_doc_ids[]', doc.doc_id, false, {:class => "google_docs_input", :id => "google_doc_#{index}"}
+    = google_doc_image(doc,'16px')
+    %span{:class => "tooltip2"}=doc.title

@@ -21,3 +21,5 @@ uploads/*
 webrat-*
 capybara-*
 *.esproj
+*.swp
+config/google_oauth_sample.yml

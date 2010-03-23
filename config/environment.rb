@@ -16,6 +16,7 @@ Rails::Initializer.run do |config|
   config.gem 'xml-simple', :lib => 'xmlsimple'
   config.gem 'ruby-openid', :lib => 'openid'
   config.gem 'ruby-openid-apps-discovery', :lib => 'gapps_openid'
+  config.gem 'nokogiri'
 
   config.action_view.sanitized_allowed_tags = 'table', 'th', 'tr', 'td'
   config.time_zone = APP_CONFIG['time_zone']

@@ -13,9 +13,9 @@ class CommentsController < ApplicationController
     else
       @comment = current_user.new_comment(current_user,@target,params[:comment])
     end
-
     if @comment.save
       @comment.save_uploads(params)
+      @comment.save_google_docs(params,current_user,session)
     end
 
     @target = @comment.target
@@ -57,7 +57,10 @@ class CommentsController < ApplicationController
   end
 
   def update
-    @comment.save_uploads(params) if @comment.update_attributes(params[:comment])
+    if @comment.update_attributes(params[:comment])
+      @comment.save_uploads(params)
+      @comment.save_google_docs(params,current_user,session)
+    end
     respond_to{|f|f.js}
   end
 

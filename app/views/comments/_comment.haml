@@ -21,4 +21,7 @@
         - else
           .upload_list
             = list_uploads_inline(comment.uploads)
+      - if comment.google_docs.any?
+        .google_docs_list
+          = list_google_docs_inline(comment.google_docs)
     .clear

@@ -1,2 +1,2 @@
-%iframe.upload_form#upload_form{:src => upload_url_for(comment) + "?iframe=true", :scrolling => 'no', :frameborder => 0 }
+%iframe.upload_form#upload_form{:src => upload_url_for(comment) + "?iframe=true", :scrolling => 'no', :frameborder => 0, :style => "height:#{session[:google_mp] ? "175px" : "28px"}" }
   &nbsp;

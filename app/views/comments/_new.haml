@@ -34,6 +34,7 @@
             = t('tasks.status.rejected')
           = javascript_tag "$$('.statuses input').each(function(e){ if (e.checked) { e.up('.status').addClassName('active') }; })"
           = javascript_tag "Comment.watch_status();"
+    #google_docs_list{:style => "display:none"}
     .submit{ :id => js_id(:new_submit,Comment.new) }
       %span.showPreview
         %button{}

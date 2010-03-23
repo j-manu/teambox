@@ -1,0 +1,4 @@
+.google_doc{:id => "google_doc_#{google_doc.id}"}
+  = google_doc_image(google_doc,'16px')
+  %span.filename
+    = link_to google_doc.title, google_doc, {:target => "_blank"}

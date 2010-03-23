@@ -28,11 +28,15 @@ class SessionsController < ApplicationController
     OpenID::SimpleSign.store.add_file("#{RAILS_ROOT}/vendor/gems/ruby-openid-apps-discovery-1.01/lib/ca-bundle.crt")
     authenticate_with_open_id(params[:domain], :return_to => "http://#{APP_CONFIG['app_domain']}/session/create_openid", :required => ['http://axschema.org/namePerson/first', 'http://axschema.org/namePerson/last', 'http://axschema.org/contact/email']) do |result, identity_url, registration|
       if result.successful?
+        session[:google_mp] = true
         handle_auth_user(registration['http://axschema.org/contact/email'].first,
                          registration['http://axschema.org/namePerson/first'].first,
                          registration['http://axschema.org/namePerson/last'].first)
       end
     end
+  rescue
+    flash[:error] = "An unexpected error occurred. Please try again later"
+    redirect_to root_url
   end
 
   def create_oauth

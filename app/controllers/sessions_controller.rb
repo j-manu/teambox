@@ -32,11 +32,11 @@ class SessionsController < ApplicationController
         handle_auth_user(registration['http://axschema.org/contact/email'].first,
                          registration['http://axschema.org/namePerson/first'].first,
                          registration['http://axschema.org/namePerson/last'].first)
+      else
+        flash[:error] = "Login Denied. Please try again later"
+        redirect_to root_url
       end
     end
-  rescue
-    flash[:error] = "An unexpected error occurred. Please try again later"
-    redirect_to root_url
   end
 
   def create_oauth

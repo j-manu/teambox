@@ -1,5 +1,8 @@
 - @docs.each_with_index do |doc,index|
-  .google_doc_holder{:style => "float:left;padding:0 30px;height:20px;width:150px;overflow:hidden"}
+  .google_doc_holder{:class => "gdocs_holder"}
     = check_box_tag 'google_doc_ids[]', doc.doc_id, false, {:class => "google_docs_input", :id => "google_doc_#{index}"}
     = google_doc_image(doc,'16px')
-    %span{:class => "tooltip2"}=doc.title
+    %span{:class => "g_title", :id => "g_title_#{index}"}=doc.title
+    %span{:class => "g_tooltip",:id => "g_title_#{index}_tooltip", :style => "display:none"}=doc.title
+- if @docs.size == 0
+  %span= "Sorry. We could not retrieve your documents"

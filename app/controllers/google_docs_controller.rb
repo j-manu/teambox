@@ -15,16 +15,11 @@ class GoogleDocsController < ApplicationController
     # collecting ids and then checking for include because checking with objects
     # was unreliable in my experience
     if doc.comment.project.users.collect {|u| u.id}.include?(current_user.id)
-      begin
         gd = Gdata.new(doc.user.email)
         resp = gd.add_acl_member(doc.acl_link,current_user.email)
-        if [201,409].include?(resp.code.to_i)
-        else
+        unless [201,409].include?(resp.code.to_i)
           flash.now[:error] = "Access denied to the document"
         end
-      rescue
-        flash.now[:error] = "An unexpected error occurred. Please try again later"
-      end
     else
       flash.now[:error] = "You will not be able to view this document because you are not among the project users"
     end

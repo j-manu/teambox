@@ -10899,6 +10899,22 @@ Element.addMethods({
   }
 });
 Event.addBehavior({
+  ".g_title:mouseover":function(e) {
+     if ($($(this).id+'_tooltip') != null){
+      tooltip = $($(this).id+'_tooltip')
+      var mouse_x = Event.pointerX(e);
+      var mouse_y = Event.pointerY(e);
+      tooltip.show();
+      tooltip.move(mouse_x + 10,mouse_y + 10);
+    }
+  },
+  ".g_title:mouseout": function(e) {
+     if ($($(this).id+'_tooltip') != null){
+      tooltip.hide();
+    }
+  }
+});
+Event.addBehavior({
   ".upload_wrap:mouseover": function(e){
     $(this).down('p.actions').show();
   },
@@ -10913,9 +10929,3 @@ User = {
     return $('current_user_login').readAttribute("value");
   }
 }
-Event.addBehavior({
-  ".tooltip:mouseover":function(e) {
-  },
-  ".tooltip:mouseout": function(e) {
-  }
-});
